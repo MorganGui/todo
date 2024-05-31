@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="d-flex align-center justify-space-evenly mb-6">
-      <v-btn icon @click="openModal()">
+      <v-btn icon @click="openModal">
         <v-icon>mdi-plus</v-icon>
         <v-tooltip activator=parent location=bottom>Ajouter une tâche</v-tooltip>
       </v-btn>
@@ -10,39 +10,22 @@
         <v-tooltip activator=parent location=bottom>Actualiser la liste</v-tooltip>
       </v-btn>
     </div>
-    <v-card v-for="task of tasks" v-bind:key="task.id"  :color="task.checked ? 'green-lighten-3' : ''">
-      <v-card-title class="d-flex justify-space-between">
-        {{ task.title }}
-        <div class="d-flex align-center">
-          <v-btn icon variant=text color=red size=small @click="deleteTask(task)">
-            <v-icon size=x-large>mdi-delete-outline</v-icon>
-            <v-tooltip activator=parent location=bottom>Supprimer</v-tooltip>
-          </v-btn>
-          <v-btn icon variant=text color=cyan size=small @click="openModal(task)">
-            <v-icon size=x-large>mdi-pencil-outline</v-icon>
-            <v-tooltip activator=parent location=bottom>Modifier</v-tooltip>
-          </v-btn>
-          <v-checkbox v-model="task.checked" hide-details @change="task.save()" />
-        </div>
-      </v-card-title>
-      <v-card-text>
-        {{ task.desc }}
-      </v-card-text>
-    </v-card>
+
+    <TaskCard v-for="task of tasks" v-bind:key="task.id" :task="task" @openModal="openModal" @refreshTasks="refreshTasks" />
 
     <v-dialog v-model="modal" max-width="750px" persistent>
       <v-card>
-        <v-form @submit.prevent.stop="submit()">
+        <v-form @submit.prevent.stop="submit">
           <v-card-title class="d-flex justify-space-between">
             Nouvelle tâche
-            <v-btn icon="mdi-close" variant=text size=small @click="closeModal()" />
+            <v-btn icon="mdi-close" variant=text size=small @click="closeModal" />
           </v-card-title>
           <v-card-text>
             <v-text-field label="Titre" clearable v-model="currentTask.title" :rules="rules" />
             <v-textarea auto-grow rows=1 max-rows=5 label="Description" clearable v-model="currentTask.desc" :rules="rules" class="mt-2" />
           </v-card-text>
           <v-card-actions class="justify-center">
-            <v-btn @click="closeModal()" variant=tonal>Annuler</v-btn>
+            <v-btn @click="closeModal" variant=tonal>Annuler</v-btn>
             <v-btn type=submit variant=flat color=cyan>Sauvegarder</v-btn>
           </v-card-actions>
         </v-form>
@@ -53,8 +36,10 @@
 
 <script>
 import Task from '@/classes/Task.js'
+import TaskCard from '@/components/TaskCard.vue'
 
 export default {
+  components: { TaskCard },
   data() {
     return {
       tasks: [],
@@ -91,10 +76,6 @@ export default {
         this.refreshTasks()
         this.closeModal()
       }
-    },
-    async deleteTask(task) {
-      await task.delete()
-      this.refreshTasks()
     }
   }
 }
