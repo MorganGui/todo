@@ -1,23 +1,29 @@
 <template>
-  <header>
-    <h1>ToDo</h1>
-  </header>
-
-  <router-view />
-
-  <footer class="text-center">
-    Copyright ©{{ new Date().getFullYear() }} Morgan Guillemin
-  </footer>
+  <div class="content">
+    <header class="px-6 py-3 d-flex align-center gap-3 cursor-pointer" @click="$router.push('/')">
+      <v-icon size=x-large>mdi-sticker-check-outline</v-icon>
+      <h1 class="font-weight-medium">ToDo</h1>
+    </header>
+  
+    <router-view />
+  
+    <footer class="text-center">
+      Copyright ©{{ new Date().getFullYear() }} Morgan Guillemin
+    </footer>
+  </div>
 </template>
 
 <style>
-html, body {
+html, body, #app {
   height: 100%;
 }
-#app {
+.content {
   min-height: 100%;
   display: grid;
   grid-template-rows: auto 1fr auto;
+  background-image: url('@/assets/images/background.webp');
+  background-repeat: repeat;
+  background-color: transparent;
 }
 
 .gap-1 { gap: 4px; }
